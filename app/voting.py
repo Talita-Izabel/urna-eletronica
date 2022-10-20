@@ -43,8 +43,8 @@ class Voting:
     def addVote(self, candidate):
         if candidate == None or candidate == '#': candidate = 'null'
         if candidate == '*': candidate = 'blank'
-        
+
         value = countingOfVotes.get(candidate)
         countingOfVotes.update({candidate:value+1})
-        print(countingOfVotes.items())
+        # print(countingOfVotes.items())
         print()

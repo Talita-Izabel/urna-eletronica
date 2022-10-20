@@ -1,4 +1,5 @@
 from file import File
+from voter import Voter
 from dictionaries import eleitores, deputadosEstadual, deputadosFederal, governadores, presidentes, senadores, countingOfVotes
 
 class LoadFiles:
@@ -14,7 +15,7 @@ class LoadFiles:
         self.fillDictionaries('candidatos_presidente.txt', presidentes)
         self.fillDictionaries('candidatos_senador.txt', senadores)
 
-        print(countingOfVotes.items())
+        print(eleitores.items())
 
         # Votos em branco e nulos
         countingOfVotes['blank'] = 0
@@ -32,8 +33,10 @@ class LoadFiles:
 
             if(dictionary != eleitores):
                 countingOfVotes[name] = 0
-
-            dictionary[number] = name
-
+                dictionary[number] = name
+            else:
+                elector = Voter(name, number)
+                dictionary[number] = elector
+            
         print()
 
