@@ -22,9 +22,9 @@ class LoadFiles:
         text = file.read()
         for line in text:
             name = line.split(',')[0]
-            number = line.split(',')[1].removesuffix('\n')
+            number = line.split(',')[1].removesuffix('\n').strip()
 
-            dictionary[name] = number
+            dictionary[number] = name
 
         print(dictionary.items())
         print()
