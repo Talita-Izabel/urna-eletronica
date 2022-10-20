@@ -4,3 +4,5 @@ deputadosEstadual = {}
 governadores = {}
 presidentes = {}
 senadores = {}
+
+countingOfVotes = {}

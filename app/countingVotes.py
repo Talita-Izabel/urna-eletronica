@@ -1,0 +1,2 @@
+class countingVotes:
+    print('ok')
