@@ -12,4 +12,4 @@ class Voter:
         return self.number
 
     def getVoted(self):
-        return self.Voted
+        return self.voted
