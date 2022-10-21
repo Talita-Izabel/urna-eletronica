@@ -21,7 +21,6 @@ class LoadFiles:
         countingOfVotes['blank'] = 0
         countingOfVotes['null'] = 0
 
-
     def fillDictionaries(self, file, dictionary) :
         url = (f'{self.path}/{file}')
         file = File(url)
