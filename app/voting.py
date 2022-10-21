@@ -1,10 +1,13 @@
+from voter import Voter
 from dictionaries import eleitores, deputadosEstadual, deputadosFederal, governadores, presidentes, senadores, countingOfVotes
 
 class Voting:
 
     def startVoting(self):
         while(True):
-            voter = self.getVoter('72053981695')
+            number = input('Número eleitor: ')
+            voter = self.getVoter(number)
+            if voter == None: continue
 
             number = input('Deputado Federal: ')
             candidate = self.getCandidate(number, deputadosFederal)
@@ -26,6 +29,11 @@ class Voting:
             candidate = self.getCandidate(number, presidentes)
             self.addVote(candidate)
 
+            # Informa que o eleitor votou
+            voter.setVoted()
+            eleitores.update({voter.getNumber: voter})
+
+
     def getCandidate(self, number, dictionary):
         candidate = dictionary.get(number)
         if candidate == None or candidate == '#': 
@@ -37,8 +45,25 @@ class Voting:
         return candidate
 
     def getVoter(self, number):
-        print(eleitores.get(number))
-        return eleitores.get(number)
+        voter = eleitores.get(number)
+
+        # Verificar se o eleitor já votou.
+        try:
+            if voter == None:
+                raise ValueError()
+
+            print(voter.getVoted())
+            if voter.getVoted() == True:
+                raise NameError()
+        except NameError:                
+            print('Eleitor já votou!')
+            return None
+        except ValueError:                
+            print('Eleitor não encontrado!')
+            return None
+
+
+        return voter
 
     def addVote(self, candidate):
         if candidate == None or candidate == '#': candidate = 'null'

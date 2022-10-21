@@ -13,3 +13,6 @@ class Voter:
 
     def getVoted(self):
         return self.voted
+
+    def setVoted(self):
+        self.voted = True
