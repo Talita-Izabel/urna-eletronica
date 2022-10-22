@@ -46,13 +46,12 @@ class Voting:
 
     def getVoter(self, number):
         voter = eleitores.get(number)
-
+        print('VOTER', voter.getName())
         # Verificar se o eleitor já votou.
         try:
             if voter == None:
                 raise ValueError()
 
-            print(voter.getVoted())
             if voter.getVoted() == True:
                 raise NameError()
         except NameError:                

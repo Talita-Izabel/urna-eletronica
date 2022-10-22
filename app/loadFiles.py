@@ -28,14 +28,20 @@ class LoadFiles:
         text = file.read()
         for line in text:
             name = line.split(',')[0]
-            number = line.split(',')[1].removesuffix('\n').strip()
+
 
             if(dictionary != eleitores):
+                number = line.split(',')[1].removesuffix('\n').strip()
                 countingOfVotes[name] = 0
                 dictionary[number] = name
+
+                print(name, number)
             else:
-                elector = Voter(name, number)
+                number = line.split(',')[1].strip()
+                section = line.split(',')[2].removesuffix('\n').strip()
+                elector = Voter(name, number, section)
                 dictionary[number] = elector
+                print(name, number, section)
             
         print()
 

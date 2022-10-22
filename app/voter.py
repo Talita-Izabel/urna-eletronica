@@ -1,8 +1,9 @@
 class Voter:
 
-    def __init__(self, name, number):
+    def __init__(self, name, number, section):
         self.name = name
         self.number = number
+        self.section = section
         self.voted = False
 
     def getName(self):
@@ -10,6 +11,9 @@ class Voter:
 
     def getNumber(self):
         return self.number
+
+    def getSection(self):
+        return self.section
 
     def getVoted(self):
         return self.voted
