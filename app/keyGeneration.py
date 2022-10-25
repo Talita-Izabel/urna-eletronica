@@ -1,40 +1,120 @@
+import os
 import gnupg
 from file import File
 
-class KeyGeneration:
-    def __init__(self, tipo):
-        self.tipo = tipo
+gpg = gnupg.GPG(gnupghome='/home/bita/.gnupg')
+gpg.encoding = 'utf-8'
 
-    def registrationType(self):
-        if self.tipo == 'eleitor':
-            fileEleitores = './data/eleitores.txt'
-            pathKeys = '../../data/tre/keys_eleitores'
-            self.registerKeys(fileEleitores, pathKeys)
-    
-    def registerKeys(self, file, keys): 
-        file = File(file)
-        gpg = gnupg.GPG(homedir=keys)
-        gpg.encoding = 'utf-8'
+def gerarChaveTSE():
+    tse_input = gpg.gen_key_input( 
+        name_real = 'tse',
+        key_type = 'RSA',
+        key_length = 1024,
+        passphrase = '0912UE'
+    )
 
-        cont = 0
-        texto = file.read()
-        for linha in texto:
-            print(linha)
-            nome = linha.split(',')[0]
-            print(nome)
-            cont += 1
+    tse_key = gpg.gen_key(tse_input)
+
+    pubkey = gpg.export_keys(tse_key.fingerprint)
+    seckey = gpg.export_keys(tse_key.fingerprint, True, passphrase='0912UE')
+
+    print(gpg.import_keys(pubkey))
+
+    gpg.trust_keys(tse_key.fingerprint, 'TRUST_ULTIMATE')
+
+def gerarChaveCartorioUrna():
+    fingerprintTSE = '4DDCF303B97BBE273DC460C353C9660C38C6E731'
+
+    cartorio_input = gpg.gen_key_input( 
+        name_real = 'cartorio',
+        key_type = 'RSA',
+        key_length = 1024,
+        passphrase = '0912UE'
+    )
+
+    cartorio_key = gpg.gen_key(cartorio_input)
+
+    pubkey = gpg.export_keys(cartorio_key.fingerprint)
+    seckey = gpg.export_keys(cartorio_key.fingerprint, True, passphrase='0912UE')
+
+    print(gpg.import_keys(pubkey))
+
+    # Assina
+    os.system(f'gpg -u {fingerprintTSE} --sign-key {cartorio_key.fingerprint}')
+
+    print(gpg.trust_keys(cartorio_key.fingerprint, 'TRUST_ULTIMATE'))
+
+    # ------------------------------------------------------------------------------
+    urna_input = gpg.gen_key_input( 
+        name_real = 'urna',
+        key_type = 'RSA',
+        key_length = 1024,
+        passphrase = '0912UE'
+    )
+
+    urna_key = gpg.gen_key(urna_input)
+
+    pubkey = gpg.export_keys(urna_key.fingerprint)
+    seckey = gpg.export_keys(urna_key.fingerprint, True, passphrase='0912UE')
+
+    print(gpg.import_keys(pubkey))
+
+    # Assina
+    os.system(f'gpg -u {fingerprintTSE} --sign-key {urna_key.fingerprint}')
+
+    print(gpg.trust_keys(urna_key.fingerprint, 'TRUST_ULTIMATE'))
+
+def gerarMesario():
+    fingerprintCartorio = 'A6088B247F1D84E43449E1C67C64B12D8E0D83C0'
+
+    mesario_input = gpg.gen_key_input( 
+        name_real = 'mesario',
+        key_type = 'RSA',
+        key_length = 1024,
+        passphrase = '0912UE'
+    )
+
+    masario_key = gpg.gen_key(mesario_input)
+
+    pubkey = gpg.export_keys(masario_key.fingerprint)
+    seckey = gpg.export_keys(masario_key.fingerprint, True, passphrase='0912UE')
+
+    print(gpg.import_keys(pubkey))
+
+    # Assina
+    os.system(f'gpg -u {fingerprintCartorio} --sign-key {masario_key.fingerprint}')
+
+    print(gpg.trust_keys(masario_key.fingerprint, 'TRUST_ULTIMATE'))
+
+def gerarChavesEleitores():
+    fingerprintCartorio = 'A6088B247F1D84E43449E1C67C64B12D8E0D83C0'
+
+    texto = File('eleitores.txt').read()
+
+    for eleitor in texto:
+        nome = eleitor.split(',')[0]
         
-        print(cont)
+        eleitor_input = gpg.gen_key_input( 
+            name_real = nome,
+            key_type = 'RSA',
+            key_length = 1024,
+            passphrase = '0912UE'
+        )
 
-            # input = gpg.gen_key_input( 
-            #     name_real = nome,
-            #     expire_date = '2025-04-01',
-            #     key_type = 'RSA',
-            #     key_length = 4096,
-            #     key_usage = '',
-            #     subkey_type = 'RSA',
-            #     subkey_length = 4096,
-            #     subkey_usage = 'encrypt,sign,auth',
-            #     passphrase = 'sekrit'
-            # )
-            # gpg.gen_key(input)
+        eleitor_key = gpg.gen_key(eleitor_input)
+
+        pubkey = gpg.export_keys(eleitor_key.fingerprint)
+        seckey = gpg.export_keys(eleitor_key.fingerprint, True, passphrase='0912UE')
+
+        print(gpg.import_keys(pubkey))
+
+        # Assina
+        os.system(f'gpg -u {fingerprintCartorio} --sign-key {eleitor_key.fingerprint}')
+
+        print(gpg.trust_keys(eleitor_key.fingerprint, 'TRUST_ULTIMATE'))
+
+
+def listaChaves():
+    print(gpg.list_keys(True))
+
+gerarChavesEleitores()

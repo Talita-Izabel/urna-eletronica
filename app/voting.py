@@ -46,7 +46,7 @@ class Voting:
 
     def getVoter(self, number):
         voter = eleitores.get(number)
-        print('VOTER', voter.getName())
+        #print('VOTER', voter.getName())
         # Verificar se o eleitor já votou.
         try:
             if voter == None:
@@ -70,5 +70,5 @@ class Voting:
 
         value = countingOfVotes.get(candidate)
         countingOfVotes.update({candidate:value+1})
-        # print(countingOfVotes.items())
+        print(countingOfVotes.items())
         print()
