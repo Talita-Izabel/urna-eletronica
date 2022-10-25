@@ -1,8 +1,12 @@
 import os
+import pwd
 import gnupg
 from file import File
 
-gpg = gnupg.GPG(gnupghome='/home/bita/.gnupg')
+path = os.getcwd() + "/app/config/env.json"
+env = File(path).readJSON()
+
+gpg = gnupg.GPG(gnupghome=env['gnupghome'])
 gpg.encoding = 'utf-8'
 
 def gerarChaveTSE():
@@ -10,7 +14,7 @@ def gerarChaveTSE():
         name_real = 'tse',
         key_type = 'RSA',
         key_length = 1024,
-        passphrase = '0912UE'
+        passphrase = env['password']
     )
 
     tse_key = gpg.gen_key(tse_input)
@@ -23,13 +27,13 @@ def gerarChaveTSE():
     gpg.trust_keys(tse_key.fingerprint, 'TRUST_ULTIMATE')
 
 def gerarChaveCartorioUrna():
-    fingerprintTSE = '4DDCF303B97BBE273DC460C353C9660C38C6E731'
+    fingerprintTSE = '820495A1FC892FD2D4AB2E7EC5177B1B1397B038'
 
     cartorio_input = gpg.gen_key_input( 
         name_real = 'cartorio',
         key_type = 'RSA',
         key_length = 1024,
-        passphrase = '0912UE'
+        passphrase = env['password']
     )
 
     cartorio_key = gpg.gen_key(cartorio_input)
@@ -49,7 +53,7 @@ def gerarChaveCartorioUrna():
         name_real = 'urna',
         key_type = 'RSA',
         key_length = 1024,
-        passphrase = '0912UE'
+        passphrase = env['password']
     )
 
     urna_key = gpg.gen_key(urna_input)
@@ -65,13 +69,13 @@ def gerarChaveCartorioUrna():
     print(gpg.trust_keys(urna_key.fingerprint, 'TRUST_ULTIMATE'))
 
 def gerarMesario():
-    fingerprintCartorio = 'A6088B247F1D84E43449E1C67C64B12D8E0D83C0'
+    fingerprintCartorio = '8A80A5E631D800E3B3E66B08E6E151AE8D863322'
 
     mesario_input = gpg.gen_key_input( 
         name_real = 'mesario',
         key_type = 'RSA',
         key_length = 1024,
-        passphrase = '0912UE'
+        passphrase = env['password']
     )
 
     masario_key = gpg.gen_key(mesario_input)
@@ -87,18 +91,19 @@ def gerarMesario():
     print(gpg.trust_keys(masario_key.fingerprint, 'TRUST_ULTIMATE'))
 
 def gerarChavesEleitores():
-    fingerprintCartorio = 'A6088B247F1D84E43449E1C67C64B12D8E0D83C0'
+    fingerprintCartorio = '8A80A5E631D800E3B3E66B08E6E151AE8D863322'
 
-    texto = File('eleitores.txt').read()
+    path = os.getcwd() + '/data/eleitores.txt'
+
+    texto = File(path).read()
 
     for eleitor in texto:
         nome = eleitor.split(',')[0]
-        
         eleitor_input = gpg.gen_key_input( 
             name_real = nome,
             key_type = 'RSA',
             key_length = 1024,
-            passphrase = '0912UE'
+            passphrase = env['password']
         )
 
         eleitor_key = gpg.gen_key(eleitor_input)
@@ -113,8 +118,7 @@ def gerarChavesEleitores():
 
         print(gpg.trust_keys(eleitor_key.fingerprint, 'TRUST_ULTIMATE'))
 
-
 def listaChaves():
     print(gpg.list_keys(True))
 
-gerarChavesEleitores()
+listaChaves()

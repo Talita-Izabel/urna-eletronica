@@ -1,4 +1,5 @@
 from fileinput import filename
+import json
 
 
 class File:
@@ -14,3 +15,8 @@ class File:
         with open(self.filename, 'a') as arquivo:
             texto = '\n'+texto
             arquivo.write(texto)
+
+    def readJSON(self):
+        with open(self.filename) as json_file:
+            data = json.load(json_file)
+            return data
