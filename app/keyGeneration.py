@@ -25,10 +25,9 @@ def gerarChaveTSE():
     print(gpg.import_keys(pubkey))
 
     gpg.trust_keys(tse_key.fingerprint, 'TRUST_ULTIMATE')
+    gerarChaveCartorioUrna(tse_key.fingerprint)
 
-def gerarChaveCartorioUrna():
-    fingerprintTSE = '820495A1FC892FD2D4AB2E7EC5177B1B1397B038'
-
+def gerarChaveCartorioUrna(fingerprintTSE):
     cartorio_input = gpg.gen_key_input( 
         name_real = 'cartorio',
         key_type = 'RSA',
@@ -68,9 +67,11 @@ def gerarChaveCartorioUrna():
 
     print(gpg.trust_keys(urna_key.fingerprint, 'TRUST_ULTIMATE'))
 
-def gerarMesario():
-    fingerprintCartorio = '8A80A5E631D800E3B3E66B08E6E151AE8D863322'
+    # ------------
+    gerarMesario(cartorio_key.fingerprint)
+    gerarChavesEleitores(cartorio_key.fingerprint)
 
+def gerarMesario(fingerprintCartorio):
     mesario_input = gpg.gen_key_input( 
         name_real = 'mesario',
         key_type = 'RSA',
@@ -90,9 +91,7 @@ def gerarMesario():
 
     print(gpg.trust_keys(masario_key.fingerprint, 'TRUST_ULTIMATE'))
 
-def gerarChavesEleitores():
-    fingerprintCartorio = '8A80A5E631D800E3B3E66B08E6E151AE8D863322'
-
+def gerarChavesEleitores(fingerprintCartorio):
     path = os.getcwd() + '/data/eleitores.txt'
 
     texto = File(path).read()
@@ -121,4 +120,6 @@ def gerarChavesEleitores():
 def listaChaves():
     print(gpg.list_keys(True))
 
+
+# gerarChaveTSE()
 listaChaves()

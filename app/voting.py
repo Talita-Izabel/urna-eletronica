@@ -1,5 +1,6 @@
 from voter import Voter
-from dictionaries import eleitores, deputadosEstadual, deputadosFederal, governadores, presidentes, senadores, countingOfVotes
+from dictionaries import eleitores, candidatos
+from candidate import DEPUTADO_ESTADUAL, DEPUTADO_FEDERAL, GOVERNADOR, PRESIDENTE, SENADOR
 
 class Voting:
 
@@ -10,23 +11,23 @@ class Voting:
             if voter == None: continue
 
             number = input('Deputado Federal: ')
-            candidate = self.getCandidate(number, deputadosFederal)
+            candidate = self.getCandidate(number, DEPUTADO_FEDERAL)
             self.addVote(candidate)
 
             number = input('Deputado Estadual: ')
-            candidate = self.getCandidate(number, deputadosEstadual)
+            candidate = self.getCandidate(number, DEPUTADO_ESTADUAL)
             self.addVote(candidate)
 
             number = input('Senador: ')
-            candidate = self.getCandidate(number, senadores)
+            candidate = self.getCandidate(number, SENADOR)
             self.addVote(candidate)
 
             number = input('Governador: ')
-            candidate = self.getCandidate(number, governadores)
+            candidate = self.getCandidate(number, GOVERNADOR)
             self.addVote(candidate)
 
             number = input('Presidente: ')
-            candidate = self.getCandidate(number, presidentes)
+            candidate = self.getCandidate(number, PRESIDENTE)
             self.addVote(candidate)
 
             # Informa que o eleitor votou
@@ -34,14 +35,16 @@ class Voting:
             eleitores.update({voter.getNumber: voter})
 
 
-    def getCandidate(self, number, dictionary):
-        candidate = dictionary.get(number)
-        if candidate == None or candidate == '#': 
-            candidate = 'null' 
+    def getCandidate(self, number, office):
+        candidate = candidatos.get(number)
+        print(candidate)
+        if candidate == None or candidate.getNumber() == '#' or candidate.getOffice() != office: 
+            candidate = candidatos.get('null')
+            print(candidate.getName(), candidate.getVotes())
             print('\tNULO')
-        elif candidate == '*': candidate = 'blank'
+        elif candidate.getNumber() == '*': candidate = candidatos.get('blank')
         else:
-            print(f'\tCadidato: {candidate} - {number}')
+            print(f'\tCadidato: {candidate.getName()} - {number}')
         return candidate
 
     def getVoter(self, number):
@@ -65,10 +68,10 @@ class Voting:
         return voter
 
     def addVote(self, candidate):
-        if candidate == None or candidate == '#': candidate = 'null'
-        if candidate == '*': candidate = 'blank'
+        votes = candidate.getVotes() + 1
+        candidate.setVotes(votes)
 
-        value = countingOfVotes.get(candidate)
-        countingOfVotes.update({candidate:value+1})
-        print(countingOfVotes.items())
+        candidatos.update({candidate.getNumber():candidate})
+        print(candidatos.get(candidate.getNumber()).getName())
+        print(candidatos.get(candidate.getNumber()).getVotes())
         print()

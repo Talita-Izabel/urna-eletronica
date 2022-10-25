@@ -1,4 +1,6 @@
 eleitores = {}
+candidatos = {}
+
 deputadosFederal = {}
 deputadosEstadual = {}
 governadores = {}

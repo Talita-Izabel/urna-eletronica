@@ -1,2 +1,0 @@
-class countingVotes:
-    print('ok')

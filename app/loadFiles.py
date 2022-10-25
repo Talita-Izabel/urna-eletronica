@@ -1,6 +1,7 @@
+from candidate import DEPUTADO_ESTADUAL, DEPUTADO_FEDERAL, GOVERNADOR, PRESIDENTE, SENADOR, Candidate
 from file import File
 from voter import Voter
-from dictionaries import eleitores, deputadosEstadual, deputadosFederal, governadores, presidentes, senadores, countingOfVotes
+from dictionaries import eleitores, candidatos
 
 class LoadFiles:
     def __init__(self, path):
@@ -8,20 +9,23 @@ class LoadFiles:
         self.load()
 
     def load(self):
-        self.fillDictionaries('eleitores.txt', eleitores)
-        self.fillDictionaries('candidatos_deputado_estadual.txt', deputadosEstadual)
-        self.fillDictionaries('candidatos_deputado_federal.txt', deputadosFederal)
-        self.fillDictionaries('candidatos_governador.txt', governadores)
-        self.fillDictionaries('candidatos_presidente.txt', presidentes)
-        self.fillDictionaries('candidatos_senador.txt', senadores)
+        self.fillDictionaries('eleitores.txt', eleitores, 0)
+        self.fillDictionaries('candidatos_deputado_estadual.txt', candidatos, DEPUTADO_ESTADUAL)
+        self.fillDictionaries('candidatos_deputado_federal.txt', candidatos, DEPUTADO_FEDERAL)
+        self.fillDictionaries('candidatos_governador.txt', candidatos, GOVERNADOR)
+        self.fillDictionaries('candidatos_presidente.txt', candidatos, PRESIDENTE)
+        self.fillDictionaries('candidatos_senador.txt', candidatos, SENADOR)
 
         print(eleitores.items())
 
         # Votos em branco e nulos
-        countingOfVotes['blank'] = 0
-        countingOfVotes['null'] = 0
+        candidate = Candidate('blank', '#', None, 0)
+        candidatos['blank'] = candidate
 
-    def fillDictionaries(self, file, dictionary) :
+        candidate = Candidate('null', '*', None, 0)
+        candidatos['null'] = candidate
+
+    def fillDictionaries(self, file, dictionary, office) :
         url = (f'{self.path}/{file}')
         file = File(url)
 
@@ -32,8 +36,10 @@ class LoadFiles:
 
             if(dictionary != eleitores):
                 number = line.split(',')[1].removesuffix('\n').strip()
-                countingOfVotes[name] = 0
-                dictionary[number] = name
+
+                candidate = Candidate(name, number, office, 0)
+
+                dictionary[number] = candidate
 
                 print(name, number)
             else:
