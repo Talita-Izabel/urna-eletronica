@@ -1,7 +1,5 @@
 import ast
-import json
 import os
-import pickle
 import jsonpickle
 import gnupg
 import random
@@ -128,3 +126,14 @@ class ControlCenter:
         dict = ast.literal_eval(decrypted)
         #print(dict, type(dict))   
         return dict
+
+    # Caso precise para validar os votos e eleitores
+    def decryptVotersVoteFile(self):
+        url = './data/votos_eleitores.txt'
+        with open(url, 'r') as arquivo:
+            texto = arquivo.read()
+
+        texto = texto.split('\n')
+        for linha in texto:
+            dictionary = self.decryptVote(linha)
+            print(dictionary)
