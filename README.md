@@ -1,12 +1,12 @@
 # Urna Eletronica
 
-##### Pacotes necessários
+#### Pacotes necessários
 
 * python-gnupg
 * jsonpickle
 
 
-##### Execução da aplicação
+#### Execução da aplicação
 
 ```shell
 python app/__init__.py
