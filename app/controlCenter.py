@@ -34,7 +34,7 @@ class ControlCenter:
 
         # Assina a com a chave do eleitor
         signedData = self.gpg.sign(serialized, keyid=key['fingerprint'], passphrase=env['password'])
-        print('Chave eleitor', signedData)
+        #print('Chave eleitor', signedData)
 
         signedStr = jsonpickle.encode(signedData)
 
@@ -42,10 +42,10 @@ class ControlCenter:
         key = self.getPrivKey('mesario')
 
         signedData = self.gpg.sign(signedStr, keyid=key['fingerprint'], passphrase=env['password'])
-        print('Chave mesario', signedData)
+        #print('Chave mesario', signedData)
 
         signedStr = jsonpickle.encode(signedData)
-        print(type(signedStr), signedStr)
+        #print(type(signedStr), signedStr)
 
         # Adiciona string final do voto na lista (para não ir sempre no arquivo)
         listaVotos.append(signedStr)
@@ -61,7 +61,12 @@ class ControlCenter:
             file.write(vote)
 
         # Após salvar no arquivo a urna irá encriptar o arquivo
-        
+        # key = self.getPrivKey('urna')
+        # key_tse = self.getPrivKey('tse')
+        # encrypted_ascii_data = self.gpg.encrypt_file(open(url, 'rb'), key_tse['fingerprint'], passphrase=env['password'])
+        # print(encrypted_ascii_data, type(encrypted_ascii_data))
+
+
 
         # # Transforma em sign novamente
         # teste = jsonpickle.decode(signedStr)
@@ -103,9 +108,9 @@ class ControlCenter:
 
         return key[0]
 
-    def decryptVote(self):
+    def decryptVote(self, voteStr):
         # Transforma em sign novamente
-        teste = jsonpickle.decode(signedStr)
+        teste = jsonpickle.decode(voteStr)
 
         decrypted = self.gpg.decrypt(message=teste.data, passphrase=env['password'])
         #print('\n\n',decrypted.data, type(decrypted))
@@ -118,7 +123,8 @@ class ControlCenter:
         signedStr = jsonpickle.encode(teste)
         teste = jsonpickle.decode(signedStr)
         decrypted = str(self.gpg.decrypt(message=teste.data, passphrase=env['password']))
-        print('\n\n',decrypted, type(decrypted))
+        #print('\n\n',decrypted, type(decrypted))
 
         dict = ast.literal_eval(decrypted)
-        print(dict, type(dict))   
+        #print(dict, type(dict))   
+        return dict

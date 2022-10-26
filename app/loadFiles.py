@@ -1,7 +1,10 @@
+from curses.ascii import isblank
+import os
+from controlCenter import ControlCenter 
 from candidate import DEPUTADO_ESTADUAL, DEPUTADO_FEDERAL, GOVERNADOR, PRESIDENTE, SENADOR, Candidate
 from file import File
 from voter import Voter
-from dictionaries import eleitores, candidatos
+from dictionaries import eleitores, candidatos, listaVotos
 
 class LoadFiles:
     def __init__(self, path):
@@ -16,6 +19,7 @@ class LoadFiles:
         self.fillDictionaries('candidatos_presidente.txt', candidatos, PRESIDENTE)
         self.fillDictionaries('candidatos_senador.txt', candidatos, SENADOR)
 
+        self.loadVotes()
 
         # Votos em branco e nulos
         candidate = Candidate('blank', '#', None, 0)
@@ -47,5 +51,27 @@ class LoadFiles:
                 elector = Voter(name, number, section)
                 dictionary[number] = elector
     
-            
+    def loadVotes(self): 
+        url = './data/votos_eleitores.txt'
+
+        # Se o arquivo existir carrega os dados para a lista
+        if os.path.exists(url): 
+            url = './data/votos_eleitores.txt'
+            with open(url, 'r') as arquivo:
+                texto = arquivo.read()
+
+            texto = texto.split('\n')
+            for linha in texto:
+                # Verifica se não há linha vazia
+                if len(linha) == 0:
+                    continue
+                listaVotos.append(linha)
+                dictionary = ControlCenter().decryptVote(linha)
+
+                number = dictionary['number']
+
+                voter = eleitores.get(number)
+
+                voter.setVoted()
+                eleitores.update({number: voter})
 
