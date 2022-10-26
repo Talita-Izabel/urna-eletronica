@@ -9,14 +9,13 @@ class LoadFiles:
         self.load()
 
     def load(self):
-        self.fillDictionaries('eleitores.txt', eleitores, 0)
+        self.fillDictionaries('eleitores.txt', eleitores, 9)
         self.fillDictionaries('candidatos_deputado_estadual.txt', candidatos, DEPUTADO_ESTADUAL)
         self.fillDictionaries('candidatos_deputado_federal.txt', candidatos, DEPUTADO_FEDERAL)
         self.fillDictionaries('candidatos_governador.txt', candidatos, GOVERNADOR)
         self.fillDictionaries('candidatos_presidente.txt', candidatos, PRESIDENTE)
         self.fillDictionaries('candidatos_senador.txt', candidatos, SENADOR)
 
-        print(eleitores.items())
 
         # Votos em branco e nulos
         candidate = Candidate('blank', '#', None, 0)
@@ -41,13 +40,12 @@ class LoadFiles:
 
                 dictionary[number] = candidate
 
-                print(name, number)
+    
             else:
                 number = line.split(',')[1].strip()
                 section = line.split(',')[2].removesuffix('\n').strip()
                 elector = Voter(name, number, section)
                 dictionary[number] = elector
-                print(name, number, section)
+    
             
-        print()
 

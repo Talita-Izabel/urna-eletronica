@@ -1,3 +1,5 @@
+from controlCenter import ControlCenter
+from vote import Vote
 from voter import Voter
 from dictionaries import eleitores, candidatos
 from candidate import DEPUTADO_ESTADUAL, DEPUTADO_FEDERAL, GOVERNADOR, PRESIDENTE, SENADOR
@@ -6,6 +8,8 @@ class Voting:
 
     def startVoting(self):
         while(True):
+            votes = []
+
             number = input('Número eleitor: ')
             voter = self.getVoter(number)
             if voter == None: continue
@@ -13,26 +17,35 @@ class Voting:
             number = input('Deputado Federal: ')
             candidate = self.getCandidate(number, DEPUTADO_FEDERAL)
             self.addVote(candidate)
+            votes.append(candidate.getNumber())
 
             number = input('Deputado Estadual: ')
             candidate = self.getCandidate(number, DEPUTADO_ESTADUAL)
             self.addVote(candidate)
+            votes.append(candidate.getNumber())
 
             number = input('Senador: ')
             candidate = self.getCandidate(number, SENADOR)
             self.addVote(candidate)
+            votes.append(candidate.getNumber())
 
             number = input('Governador: ')
             candidate = self.getCandidate(number, GOVERNADOR)
             self.addVote(candidate)
+            votes.append(candidate.getNumber())
 
             number = input('Presidente: ')
             candidate = self.getCandidate(number, PRESIDENTE)
             self.addVote(candidate)
+            votes.append(candidate.getNumber())
+
+
+            # Gerenciar voto
+            self.manageVote(voter, votes)
 
             # Informa que o eleitor votou
             voter.setVoted()
-            eleitores.update({voter.getNumber: voter})
+            eleitores.update({voter.getNumber(): voter})
 
 
     def getCandidate(self, number, office):
@@ -75,3 +88,10 @@ class Voting:
         print(candidatos.get(candidate.getNumber()).getName())
         print(candidatos.get(candidate.getNumber()).getVotes())
         print()
+
+    def manageVote(self, voter, votes):
+        name = voter.getName()
+        number = voter.getNumber()
+
+        #vote = Vote(name, number, votes)
+        ControlCenter().signVote(name, number, votes)
