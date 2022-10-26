@@ -1,6 +1,6 @@
 # Urna Eletronica
 
-## Pacotes necesários
+##### Pacotes necessários
 
 * python-gnupg
 * jsonpickle
@@ -18,7 +18,7 @@ Para importação das chaves:
 python app/importKeys.py
 ```
 
-Para a apuração dos votos os arquivos "votos_candidatos.txt" deverão estar na pasta './data/counting-votes'
+Para a apuração dos votos os arquivos "votos_candidatos.txt" deverão estar na pasta './data/counting-votes':
 
 ```shell
 python app/countingVotes.py
