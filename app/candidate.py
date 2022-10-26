@@ -25,3 +25,6 @@ class Candidate():
 
         def setVotes(self, votes):
             self.votes = votes
+
+        def addVote(self, votes):
+            self.votes += votes

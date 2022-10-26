@@ -10,7 +10,6 @@ from dictionaries import eleitores, candidatos, listaVotos
 class LoadFiles:
     def __init__(self, path):
         self.path = path
-        self.load()
 
     def load(self):
         self.fillDictionaries('eleitores.txt', eleitores, 9)
@@ -37,9 +36,9 @@ class LoadFiles:
         text = file.read()
         for line in text:
             name = line.split(',')[0]
+            #print(line, type(line), dictionary !== eleitores, dictionary, eleitores)
 
-
-            if(dictionary != eleitores):
+            if dictionary != eleitores:
                 number = line.split(',')[1].removesuffix('\n').strip()
 
                 candidate = Candidate(name, number, office, 0)
