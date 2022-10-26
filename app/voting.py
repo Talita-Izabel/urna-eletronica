@@ -85,6 +85,9 @@ class Voting:
         candidate.setVotes(votes)
 
         candidatos.update({candidate.getNumber():candidate})
+        
+        ControlCenter().signVoteFile()
+
         print(candidatos.get(candidate.getNumber()).getName())
         print(candidatos.get(candidate.getNumber()).getVotes())
         print()

@@ -5,7 +5,7 @@ import gnupg
 import random
 from file import File
 from unicodedata import normalize
-from dictionaries import listaVotos
+from dictionaries import listaVotos, candidatos
 
 path = os.getcwd() + "/app/config/env.json"    
 env = File(path).readJSON()
@@ -137,3 +137,19 @@ class ControlCenter:
         for linha in texto:
             dictionary = self.decryptVote(linha)
             print(dictionary)
+
+    def signVoteFile(self):
+        url = './data/votos_candidatos.txt'
+        file = File(url)
+        file.clearFile()
+
+        for i in candidatos.items():
+            #print('candidatos', i)
+            candidateStr = jsonpickle.encode(i)
+
+            file.write(candidateStr)
+
+            # decoded = jsonpickle.decode(candidateStr)
+            # print('decoded', decoded[1], type(decoded))
+
+        print('sign vote file')
