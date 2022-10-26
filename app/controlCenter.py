@@ -4,9 +4,10 @@ import os
 import pickle
 import jsonpickle
 import gnupg
+import random
 from file import File
 from unicodedata import normalize
-#from dictionaries import listaVotos
+from dictionaries import listaVotos
 
 path = os.getcwd() + "/app/config/env.json"    
 env = File(path).readJSON()
@@ -47,7 +48,20 @@ class ControlCenter:
         print(type(signedStr), signedStr)
 
         # Adiciona string final do voto na lista (para não ir sempre no arquivo)
+        listaVotos.append(signedStr)
 
+        # Embaralha a lista
+        random.shuffle(listaVotos) 
+
+        url = './data/votos_eleitores.txt'
+        file = File(url)
+
+        file.clearFile()
+        for vote in listaVotos:
+            file.write(vote)
+
+        # Após salvar no arquivo a urna irá encriptar o arquivo
+        
 
         # # Transforma em sign novamente
         # teste = jsonpickle.decode(signedStr)

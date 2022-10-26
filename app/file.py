@@ -1,5 +1,6 @@
-from fileinput import filename
 import json
+import os 
+from fileinput import filename
 
 
 class File:
@@ -12,11 +13,18 @@ class File:
         return texto
 
     def write(self, texto):
+        if os.path.exists(self.filename) == False: 
+            open(self.filename, 'x')
+
         with open(self.filename, 'a') as arquivo:
-            texto = '\n'+texto
+            texto = texto + '\n'
             arquivo.write(texto)
 
     def readJSON(self):
         with open(self.filename) as json_file:
             data = json.load(json_file)
             return data
+
+    def clearFile(self):
+        if os.path.exists(self.filename): 
+            os.remove(self.filename)
