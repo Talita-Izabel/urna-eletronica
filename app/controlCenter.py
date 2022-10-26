@@ -20,11 +20,10 @@ class ControlCenter:
 
         self.gpg = gpg
 
-    def signVote(self, name, number, votes):
-        print('Sign vote')
+    def signVote(self, name, number):
 
         # Transforma o objeto em string
-        votes = { 'name': name, 'number': number, 'votes': votes }
+        votes = { 'name': name, 'number': number }
 
         serialized = str(votes)
 
@@ -58,10 +57,10 @@ class ControlCenter:
         for vote in listaVotos:
             file.write(vote)
 
-        # Após salvar no arquivo a urna irá encriptar o arquivo
+        # # Após salvar no arquivo a urna irá encriptar o arquivo
         # key = self.getPrivKey('urna')
         # key_tse = self.getPrivKey('tse')
-        # encrypted_ascii_data = self.gpg.encrypt_file(open(url, 'rb'), key_tse['fingerprint'], passphrase=env['password'])
+        # encrypted_ascii_data = self.gpg.encrypt_file(open(url, 'rb'), key_tse['fingerprint'], passphrase=env['password'], always_trust=True, output=url)
         # print(encrypted_ascii_data, type(encrypted_ascii_data))
 
 
@@ -152,4 +151,9 @@ class ControlCenter:
             # decoded = jsonpickle.decode(candidateStr)
             # print('decoded', decoded[1], type(decoded))
 
-        print('sign vote file')
+        key = self.getPrivKey('urna')
+        self.gpg.sign_file(open(url, 'rb'), keyid=key['fingerprint'], passphrase=env['password'], output=url)
+
+    def decryptFile(self, filename):
+        decrypted_data = str(self.gpg.decrypt_file(open(filename, 'rb')))
+        return decrypted_data

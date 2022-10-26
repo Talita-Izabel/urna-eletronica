@@ -1,47 +1,52 @@
+import os
 from controlCenter import ControlCenter
 from vote import Vote
 from voter import Voter
 from dictionaries import eleitores, candidatos
 from candidate import DEPUTADO_ESTADUAL, DEPUTADO_FEDERAL, GOVERNADOR, PRESIDENTE, SENADOR
+from file import File
+
+path = os.getcwd() + "/app/config/env.json"    
+env = File(path).readJSON()
 
 class Voting:
 
     def startVoting(self):
         while(True):
-            votes = []
+            # votes = []
 
-            number = input('Número eleitor: ')
+            number = input('\nNúmero eleitor: ')
             voter = self.getVoter(number)
             if voter == None: continue
 
-            number = input('Deputado Federal: ')
+            number = input('\nDeputado Federal: ')
             candidate = self.getCandidate(number, DEPUTADO_FEDERAL)
             self.addVote(candidate)
-            votes.append(candidate.getNumber())
+            # votes.append(candidate.getNumber())
 
-            number = input('Deputado Estadual: ')
+            number = input('\nDeputado Estadual: ')
             candidate = self.getCandidate(number, DEPUTADO_ESTADUAL)
             self.addVote(candidate)
-            votes.append(candidate.getNumber())
+            # votes.append(candidate.getNumber())
 
-            number = input('Senador: ')
+            number = input('\nSenador: ')
             candidate = self.getCandidate(number, SENADOR)
             self.addVote(candidate)
-            votes.append(candidate.getNumber())
+            # votes.append(candidate.getNumber())
 
-            number = input('Governador: ')
+            number = input('\nGovernador: ')
             candidate = self.getCandidate(number, GOVERNADOR)
             self.addVote(candidate)
-            votes.append(candidate.getNumber())
+            # votes.append(candidate.getNumber())
 
-            number = input('Presidente: ')
+            number = input('\nPresidente: ')
             candidate = self.getCandidate(number, PRESIDENTE)
             self.addVote(candidate)
-            votes.append(candidate.getNumber())
+            # votes.append(candidate.getNumber())
 
 
             # Gerenciar voto
-            self.manageVote(voter, votes)
+            self.manageVote(voter)
 
             # Informa que o eleitor votou
             voter.setVoted()
@@ -50,18 +55,18 @@ class Voting:
 
     def getCandidate(self, number, office):
         candidate = candidatos.get(number)
-        print(candidate)
         if candidate == None or candidate.getNumber() == '#' or candidate.getOffice() != office: 
             candidate = candidatos.get('null')
             print(candidate.getName(), candidate.getVotes())
             print('\tNULO')
         elif candidate.getNumber() == '*': candidate = candidatos.get('blank')
         else:
-            print(f'\tCadidato: {candidate.getName()} - {number}')
+            print(f'\tCandidato: {candidate.getName()} - {number}')
         return candidate
 
     def getVoter(self, number):
         voter = eleitores.get(number)
+
         #print('VOTER', voter.getName())
         # Verificar se o eleitor já votou.
         try:
@@ -77,6 +82,13 @@ class Voting:
             print('Eleitor não encontrado!')
             return None
 
+        try:
+            if env['secao'] != voter.getSection():
+                raise ValueError()
+        except ValueError:                
+            print('Eleitor na seção errada!')
+            return None
+
 
         return voter
 
@@ -88,13 +100,9 @@ class Voting:
         
         ControlCenter().signVoteFile()
 
-        print(candidatos.get(candidate.getNumber()).getName())
-        print(candidatos.get(candidate.getNumber()).getVotes())
-        print()
-
-    def manageVote(self, voter, votes):
+    def manageVote(self, voter):
         name = voter.getName()
         number = voter.getNumber()
 
         #vote = Vote(name, number, votes)
-        ControlCenter().signVote(name, number, votes)
+        ControlCenter().signVote(name, number)

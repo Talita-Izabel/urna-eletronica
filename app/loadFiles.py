@@ -1,5 +1,6 @@
-from curses.ascii import isblank
 import os
+import jsonpickle
+from curses.ascii import isblank
 from controlCenter import ControlCenter 
 from candidate import DEPUTADO_ESTADUAL, DEPUTADO_FEDERAL, GOVERNADOR, PRESIDENTE, SENADOR, Candidate
 from file import File
@@ -20,6 +21,7 @@ class LoadFiles:
         self.fillDictionaries('candidatos_senador.txt', candidatos, SENADOR)
 
         self.loadVotes()
+        self.loadCandidatesVotes()
 
         # Votos em branco e nulos
         candidate = Candidate('blank', '#', None, 0)
@@ -53,10 +55,11 @@ class LoadFiles:
     
     def loadVotes(self): 
         url = './data/votos_eleitores.txt'
+        # decrypted = ControlCenter().decryptFile(url)
+        # print('decrypted', type(decrypted))
 
         # Se o arquivo existir carrega os dados para a lista
         if os.path.exists(url): 
-            url = './data/votos_eleitores.txt'
             with open(url, 'r') as arquivo:
                 texto = arquivo.read()
 
@@ -75,3 +78,27 @@ class LoadFiles:
                 voter.setVoted()
                 eleitores.update({number: voter})
 
+    def loadCandidatesVotes(self):
+        url = './data/votos_candidatos.txt'
+
+        # Se o arquivo existir carrega os dados para a lista
+        if os.path.exists(url): 
+            texto = ControlCenter().decryptFile(url)
+            #print(type(texto), texto)
+
+
+            #print(texto, type(texto))
+            # with open(url, 'r') as arquivo:
+            #     texto = arquivo.read()
+
+            texto = texto.split('\n')
+            for linha in texto:
+                # Verifica se não há linha vazia
+                if len(linha) == 0:
+                    continue
+
+                decoded = jsonpickle.decode(linha)
+                #print('decoded', decoded[0], decoded[1])
+                candidatos.update({ decoded[0]: decoded[1] })
+
+        #print(candidatos.items())
