@@ -1,12 +1,12 @@
 # Urna Eletronica
 
-#### Pacotes necessários
+### Pacotes necessários
 
 * python-gnupg
 * jsonpickle
 
 
-#### Execução da aplicação
+### Execução da aplicação
 
 ```shell
 python app/__init__.py
@@ -24,7 +24,7 @@ Para a apuração dos votos os arquivos "votos_candidatos.txt" deverão estar na
 python app/countingVotes.py
 ```
 
-#### Variáveis de ambiente
+### Variáveis de ambiente
 
 * `password` - Senha das chaves.
 * `gnupghome` - Caminho onde está localizado o gnupg.
